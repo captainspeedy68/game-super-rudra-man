@@ -1,6 +1,8 @@
 from settings import *
 from sprites import Sprite, MovingSprites
 from player import Player
+from groups import AllSprites
+
 class Level:
     def __init__(self, tmx_map):
         # display surface of the level
