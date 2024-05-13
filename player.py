@@ -137,4 +137,4 @@ class Player(pygame.sprite.Sprite):
         self.input()
         self.move(dt)
         self.check_contact()
-        print(self.timer["wall slide block"].active)
+        # print(self.timer["wall slide block"].active)
