@@ -3,7 +3,7 @@ from pygame.sprite import Group
 from timer import Timer
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, collision_sprites):
+    def __init__(self, pos, groups, collision_sprites, semi_collision_sprites):
         super().__init__(groups)
         self.image = pygame.Surface((48,56))
         self.image.fill("red")
@@ -22,7 +22,11 @@ class Player(pygame.sprite.Sprite):
         
         #collision
         self.collision_sprites = collision_sprites
+        self.semi_collision_sprites = semi_collision_sprites
         self.on_surface = {"floor": False, "left": False, "right": False}
+        
+        #check for moving platforms
+        self.platform = None    
         
         #timer
         self.timer = {
@@ -71,6 +75,7 @@ class Player(pygame.sprite.Sprite):
             if self.on_surface["floor"]:
                 self.direction.y = self.jump_height
                 self.timer["wall slide block"].activate()
+                self.rect.bottom -= 1
             elif any((self.on_surface["left"], self.on_surface["right"])) and not self.timer["wall slide block"].active:
                 self.timer["wall jump"].activate()
                 self.direction.y = self.jump_height
@@ -97,6 +102,8 @@ class Player(pygame.sprite.Sprite):
                     #top collision
                     if self.rect.top <= sprite.rect.bottom and self.old_rect.top >= sprite.old_rect.bottom:
                         self.rect.top = sprite.rect.bottom
+                        if hasattr(sprite, "moving"):
+                            self.rect.top += 6
                         
                     #bottom collision
                     if self.rect.bottom >= sprite.rect.top and self.old_rect.bottom <= sprite.old_rect.top:
@@ -105,7 +112,10 @@ class Player(pygame.sprite.Sprite):
                     #if collision is found virtically then gravity shouldn't work
                     self.direction.y = 0
                 
-    
+    #to make sure that player is moving with the moving platform
+    def platform_move(self, dt):
+        if self.platform:
+            self.rect.topleft += self.platform.direction * self.platform.speed * dt
     
     def check_contact(self):
         floor_rect = pygame.Rect(self.rect.bottomleft, (self.rect.width, 2))
@@ -123,7 +133,10 @@ class Player(pygame.sprite.Sprite):
         self.on_surface["right"] = True if right_side_rect.collidelist(collision_rects) >= 0 else False
         self.on_surface["left"] = True if left_side_rect.collidelist(collision_rects) >= 0 else False
         
-        # print(self.on_surface)
+        self.platform = None
+        for sprite in [sprite for sprite in self.collision_sprites.sprites() if hasattr(sprite, "moving")]:
+            if sprite.rect.colliderect(floor_rect):
+                self.platform = sprite
         
         
     def update_timer(self):
@@ -136,5 +149,6 @@ class Player(pygame.sprite.Sprite):
         self.update_timer()
         self.input()
         self.move(dt)
+        self.platform_move(dt)
         self.check_contact()
         # print(self.timer["wall slide block"].active)
