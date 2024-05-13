@@ -31,7 +31,8 @@ class Player(pygame.sprite.Sprite):
         #timer
         self.timer = {
             "wall jump": Timer(400),
-            "wall slide block": Timer(200)
+            "wall slide block": Timer(200),
+            "platform skip": Timer(300)#for semi collision
         }
       
     #key inputs  
@@ -44,6 +45,8 @@ class Player(pygame.sprite.Sprite):
                 input_vector.x -= 1
             if keys[pygame.K_RIGHT]:
                 input_vector.x += 1
+            if keys[pygame.K_DOWN]:
+                self.timer["platform skip"].activate()
             self.direction.x = input_vector.normalize().x if input_vector else input_vector.x #using normalise prevents from the speeding from increasing
             
         if keys[pygame.K_SPACE]:
@@ -69,6 +72,7 @@ class Player(pygame.sprite.Sprite):
             self.direction.y += self.gravity / 2 * dt #for the accelaration of gravty
         #check for virtical movements
         self.collision("virtical")
+        self.semi_collision()
         
         
         if self.jump:
@@ -91,26 +95,35 @@ class Player(pygame.sprite.Sprite):
                 #horizontal collisions
                 if axis == "horizontal":
                     #left side collision check
-                    if self.rect.left <= sprite.rect.right and self.old_rect.left >= sprite.old_rect.right:
+                    if self.rect.left <= sprite.rect.right and int(self.old_rect.left) >= sprite.old_rect.right:
                         self.rect.left = sprite.rect.right
                     #right side collision
-                    if self.rect.right >= sprite.rect.left and self.old_rect.right <= sprite.old_rect.left:
+                    if self.rect.right >= sprite.rect.left and int(self.old_rect.right) <= sprite.old_rect.left:
                         self.rect.right = sprite.rect.left
                         
                 
                 if axis == "virtical":
                     #top collision
-                    if self.rect.top <= sprite.rect.bottom and self.old_rect.top >= sprite.old_rect.bottom:
+                    if self.rect.top <= sprite.rect.bottom and int(self.old_rect.top) >= sprite.old_rect.bottom:
                         self.rect.top = sprite.rect.bottom
                         if hasattr(sprite, "moving"):
                             self.rect.top += 6
                         
                     #bottom collision
-                    if self.rect.bottom >= sprite.rect.top and self.old_rect.bottom <= sprite.old_rect.top:
+                    if self.rect.bottom >= sprite.rect.top and int(self.old_rect.bottom) <= sprite.old_rect.top:
                         self.rect.bottom = sprite.rect.top
                     
                     #if collision is found virtically then gravity shouldn't work
                     self.direction.y = 0
+           
+    def semi_collision(self):
+        if not self.timer["platform skip"].active:
+            for sprite in self.semi_collision_sprites:
+                if sprite.rect.colliderect(self.rect):
+                    if self.rect.bottom >= sprite.rect.top and int(self.old_rect.bottom) <= sprite.old_rect.top:
+                        self.rect.bottom = sprite.rect.top
+                        if self.direction.y > 0:
+                            self.direction.y = 0
                 
     #to make sure that player is moving with the moving platform
     def platform_move(self, dt):
@@ -126,15 +139,18 @@ class Player(pygame.sprite.Sprite):
         
         
         collision_rects = [sprite.rect for sprite in self.collision_sprites]
+        semi_collision_rects = [sprite.rect for sprite in self.semi_collision_sprites]
         #collisions
         #collisions on floor
-        self.on_surface["floor"] = True if floor_rect.collidelist(collision_rects) >= 0 else False
+        self.on_surface["floor"] = True if floor_rect.collidelist(collision_rects) >= 0 or floor_rect.collidelist(semi_collision_rects) >= 0 and self.direction.y >= 0 else False
         
         self.on_surface["right"] = True if right_side_rect.collidelist(collision_rects) >= 0 else False
         self.on_surface["left"] = True if left_side_rect.collidelist(collision_rects) >= 0 else False
         
         self.platform = None
-        for sprite in [sprite for sprite in self.collision_sprites.sprites() if hasattr(sprite, "moving")]:
+        #this sprite function will just turn the thing into a list. so now we can add two lists
+        sprites = self.collision_sprites.sprites() + self.semi_collision_sprites.sprites()
+        for sprite in [sprite for sprite in sprites if hasattr(sprite, "moving")]:
             if sprite.rect.colliderect(floor_rect):
                 self.platform = sprite
         
