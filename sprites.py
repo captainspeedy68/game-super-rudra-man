@@ -200,10 +200,10 @@ class Icon(pygame.sprite.Sprite):
 			self.find_path()
 
 		if self.direction.x == 1 and self.rect.centerx >= self.path[0][0] or \
-		   self.direction.x == -1 and self.rect.centerx <= self.path[0][0]:
-		   self.rect.centerx = self.path[0][0]
-		   del self.path[0]
-		   self.find_path()
+			self.direction.x == -1 and self.rect.centerx <= self.path[0][0]:
+			self.rect.centerx = self.path[0][0]
+			del self.path[0]
+			self.find_path()
 
 	def animate(self, dt):
 		self.frame_index += ANIMATION_SPEED * dt
