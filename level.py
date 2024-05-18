@@ -106,7 +106,7 @@ class Level:
 					animation_speed = ANIMATION_SPEED if not 'palm' in obj.name else ANIMATION_SPEED + uniform(-1,1)
 					AnimatedSprite((obj.x, obj.y), frames, groups, z, animation_speed)
 			if obj.name == 'flag':
-				print("Winner")
+				# print("Winner")
 				self.level_finish_rect = pygame.FRect((obj.x, obj.y), (obj.width, obj.height))
 
 		# moving objects 
