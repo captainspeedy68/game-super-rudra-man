@@ -1,5 +1,5 @@
 from settings import * 
-from sprites import Sprite
+from sprites import Sprite, Cloud
 from random import choice, randint
 from timer import Timer
 
@@ -33,7 +33,7 @@ class WorldSprites(pygame.sprite.Group):
 		
 
 class AllSprites(pygame.sprite.Group):
-	def __init__(self, width, height, horizon_line, bg_tile = None, top_limit = 0):
+	def __init__(self, width, height, clouds, horizon_line, bg_tile = None, top_limit = 0):
 		super().__init__()
 		self.display_surface = pygame.display.get_surface()
 		self.offset = vector()
@@ -43,7 +43,7 @@ class AllSprites(pygame.sprite.Group):
 			'right': -self.width + WINDOW_WIDTH,
 			'bottom': -self.height + WINDOW_HEIGHT,
 			'top': top_limit}
-		# self.sky = not bg_tile
+		self.sky = not bg_tile
 		self.horizon_line = horizon_line
 
 		if bg_tile:

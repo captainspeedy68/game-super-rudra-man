@@ -28,7 +28,7 @@ class Level:
 			height = tmx_map.height,
 			bg_tile = bg_tile, 
 			top_limit = tmx_level_properties['top_limit'], 
-			# clouds = {'large': level_frames['cloud_large'], 'small': level_frames['cloud_small']},
+			clouds = {'large': level_frames['cloud_large'], 'small': level_frames['cloud_small']},
 			horizon_line = tmx_level_properties['horizon_line'])
 		self.collision_sprites = pygame.sprite.Group()
 		self.semi_collision_sprites = pygame.sprite.Group()
@@ -106,6 +106,7 @@ class Level:
 					animation_speed = ANIMATION_SPEED if not 'palm' in obj.name else ANIMATION_SPEED + uniform(-1,1)
 					AnimatedSprite((obj.x, obj.y), frames, groups, z, animation_speed)
 			if obj.name == 'flag':
+				print("Winner")
 				self.level_finish_rect = pygame.FRect((obj.x, obj.y), (obj.width, obj.height))
 
 		# moving objects 
