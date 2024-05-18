@@ -163,6 +163,15 @@ class Player(pygame.sprite.Sprite):
         for timer in self.timer.values():
             timer.update()
     
+    def animate(self, dt):
+        self.frame_index += ANIMATION_SPEED * dt
+        if self.state == 'attack' and self.frame_index >= len(self.frames[self.state]):
+            self.state = 'idle'
+        self.image = self.frames[self.state][int(self.frame_index % len(self.frames[self.state]))]
+        self.image = self.image if self.facing_right else pygame.transform.flip(self.image, True, False)
+
+        if self.attacking and self.frame_index > len(self.frames[self.state]):
+            self.attacking = False
     #run all methods in this method
     def update(self, dt):
         self.old_rect = self.hitbox_rect.copy()
