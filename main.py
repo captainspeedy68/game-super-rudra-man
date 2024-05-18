@@ -6,7 +6,7 @@ from support import *
 from data import Data
 from debug import debug
 from ui import UI
-from overworld import Overworld
+
 
 class Game:
 	def __init__(self):
@@ -20,12 +20,12 @@ class Game:
 		self.data = Data(self.ui)
           #create dictionary to pygame load files... give the path using join so that it works in every os
 		self.tmx_maps = {
-			0: load_pygame(join('..', 'data', 'levels', 'omni.tmx')),
-			1: load_pygame(join('..', 'data', 'levels', '1.tmx')),
-			2: load_pygame(join('..', 'data', 'levels', '2.tmx')),
-			3: load_pygame(join('..', 'data', 'levels', '3.tmx')),
-			4: load_pygame(join('..', 'data', 'levels', '4.tmx')),
-			5: load_pygame(join('..', 'data', 'levels', '5.tmx')),
+			# 0: load_pygame(join('..', 'data', 'levels', 'omni.tmx')),
+			0: load_pygame(join('..', 'data', 'levels', '1.tmx')),
+			# 0: load_pygame(join('..', 'data', 'levels', '2.tmx')),
+			# 0  : load_pygame(join('..', 'data', 'levels', '3.tmx')),
+			# 0:  load_pygame(join('..', 'data', 'levels', '4.tmx')),
+			# 0: load_pygame(join('..', 'data', 'levels', '5.tmx')),
 			}
 		self.tmx_overworld = load_pygame(join('..', 'data', 'overworld', 'overworld.tmx'))
 		self.current_stage = Level(self.tmx_maps[self.data.current_level], self.level_frames, self.audio_files, self.data, self.switch_stage)
@@ -37,12 +37,12 @@ class Game:
 		if target == 'level':
 			self.current_stage = Level(self.tmx_maps[self.data.current_level], self.level_frames, self.audio_files, self.data, self.switch_stage)
 			
-		else: # overworld 
-			if unlock > 0:
-				self.data.unlocked_level = 6
-			else:
-				self.data.health -= 1
-			self.current_stage = Overworld(self.tmx_overworld, self.data, self.overworld_frames, self.switch_stage)
+		# else: # overworld 
+		# 	if unlock > 0:
+		# 		self.data.unlocked_level = 6
+		# 	else:
+		# 		self.data.health -= 1
+		# 	self.current_stage = Overworld(self.tmx_overworld, self.data, self.overworld_frames, self.switch_stage)
 
 	def import_assets(self):
 		self.level_frames = {
@@ -78,12 +78,12 @@ class Game:
 			'heart': import_folder('..', 'graphics', 'ui', 'heart'), 
 			'coin':import_image('..', 'graphics', 'ui', 'coin')
 		}
-		self.overworld_frames = {
-			'palms': import_folder('..', 'graphics', 'overworld', 'palm'),
-			'water': import_folder('..', 'graphics', 'overworld', 'water'),
-			'path': import_folder_dict('..', 'graphics', 'overworld', 'path'),
-			'icon': import_sub_folders('..', 'graphics', 'overworld', 'icon'),
-		}
+		# self.overworld_frames = {
+		# 	'palms': import_folder('..', 'graphics', 'overworld', 'palm'),
+		# 	'water': import_folder('..', 'graphics', 'overworld', 'water'),
+		# 	'path': import_folder_dict('..', 'graphics', 'overworld', 'path'),
+		# 	'icon': import_sub_folders('..', 'graphics', 'overworld', 'icon'),
+		# }
 
 		self.audio_files = {
 			'coin': pygame.mixer.Sound(join('..', 'audio', 'coin.wav')),
@@ -92,8 +92,8 @@ class Game:
 			'damage': pygame.mixer.Sound(join('..', 'audio', 'damage.wav')),
 			'pearl': pygame.mixer.Sound(join('..', 'audio', 'pearl.wav')),
 		}
-		# self.bg_music = pygame.mixer.Sound(join('..', 'audio', 'starlight_city.mp3'))
-		# self.bg_music.set_volume(0.5)
+		self.bg_music = pygame.mixer.Sound(join('..', 'audio', 'starlight_city.mp3'))
+		self.bg_music.set_volume(0.2)
 
 	def check_game_over(self):
 		if self.data.health <= 0:
