@@ -23,10 +23,16 @@ class Game:
 			4: load_pygame(join('..', 'data', 'levels', '4.tmx')),
 			5: load_pygame(join('..', 'data', 'levels', '5.tmx')),
 			}
-        
+        self.tmx_overworld = load_pygame(join('..', 'data', 'overworld', 'overworld.tmx'))
         #create levels and send map to the level
         self.current_stage = Level(self.tmx_maps[0])
         
+    #to check game over
+    def check_game_over(self):
+        if self.data.health <= 0:
+            pygame.quit()
+            sys.exit() 
+		      
     # the main run method    
     def run(self):
         while True:
