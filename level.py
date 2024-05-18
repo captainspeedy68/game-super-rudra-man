@@ -1,5 +1,5 @@
 from settings import *
-from sprites import Sprite, MovingSprites
+from sprites import Sprite, MovingSprite, AnimatedSprite, Spike, Item, ParticleEffectSprite
 from player import Player
 from groups import AllSprites
 from enemies import Tooth, Shell, Pearl
@@ -28,7 +28,7 @@ class Level:
 			height = tmx_map.height,
 			bg_tile = bg_tile, 
 			top_limit = tmx_level_properties['top_limit'], 
-			clouds = {'large': level_frames['cloud_large'], 'small': level_frames['cloud_small']},
+			# clouds = {'large': level_frames['cloud_large'], 'small': level_frames['cloud_small']},
 			horizon_line = tmx_level_properties['horizon_line'])
 		self.collision_sprites = pygame.sprite.Group()
 		self.semi_collision_sprites = pygame.sprite.Group()
