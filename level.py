@@ -200,7 +200,7 @@ class Level:
 		for sprite in self.damage_sprites:
 			if sprite.rect.colliderect(self.player.hitbox_rect):
 				self.player.get_damage()
-				self.damage_sound.play()
+				# self.damage_sound.play()
 				if hasattr(sprite, 'pearl'):
 					sprite.kill()
 					ParticleEffectSprite((sprite.rect.center), self.particle_frames, self.all_sprites)
@@ -211,7 +211,7 @@ class Level:
 			if item_sprites:
 				item_sprites[0].activate()
 				ParticleEffectSprite((item_sprites[0].rect.center), self.particle_frames, self.all_sprites)
-				self.coin_sound.play()
+				# self.coin_sound.play()
 
 	def attack_collision(self):
 		for target in self.pearl_sprites.sprites() + self.tooth_sprites.sprites():
@@ -229,11 +229,13 @@ class Level:
 
 		# bottom border 
 		if self.player.hitbox_rect.bottom > self.level_bottom:
-			self.switch_stage('overworld', -1)
+			pygame.quit()
+			sys.exit()
+			# self.switch_stage('overworld', -1)
 
-		# success 
-		if self.player.hitbox_rect.colliderect(self.level_finish_rect):
-			self.switch_stage('overworld', self.level_unlock)
+		# # success 
+		# if self.player.hitbox_rect.colliderect(self.level_finish_rect):
+		# 	self.switch_stage('overworld', self.level_unlock)
 
 	def run(self, dt):
 		self.display_surface.fill('black')
