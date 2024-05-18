@@ -21,12 +21,20 @@ class UI:
             self.coin_surf = frames['coin']
 
 	def create_hearts(self, amount):
-		for sprite in self.sprites:
-			sprite.kill()
-		for heart in range(amount):
-			x = 10 + heart * (self.heart_surf_width + self.heart_padding)
-			y = 10
-			Heart((x,y), self.heart_frames, self.sprites)
+            for sprite in self.sprites:
+                sprite.kill()
+            for heart in range(amount):
+                x = 10 + heart * (self.heart_surf_width + self.heart_padding)
+                y = 10
+                Heart((x,y), self.heart_frames, self.sprites)
+    def display_text(self):
+		if self.coin_timer.active:
+			text_surf = self.font.render(str(self.coin_amount), False, '#33323d')
+			text_rect = text_surf.get_frect(topleft = (16,34))
+			self.display_surface.blit(text_surf, text_rect)
+
+			coin_rect = self.coin_surf.get_frect(center = text_rect.bottomleft).move(0,-6)
+			self.display_surface.blit(self.coin_surf, coin_rect)
     
 
 class Heart(AnimatedSprite):
