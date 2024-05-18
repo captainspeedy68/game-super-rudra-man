@@ -1,5 +1,5 @@
 from settings import *
-from sprites import Sprite, MovingSprites, AnimatedSprite, Spike, Item, ParticleEffectSprite
+from sprites import Sprite, MovingSprites
 from player import Player
 from groups import AllSprites
 from enemies import Tooth, Shell, Pearl
