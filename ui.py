@@ -35,6 +35,15 @@ class UI:
 
 			coin_rect = self.coin_surf.get_frect(center = text_rect.bottomleft).move(0,-6)
 			self.display_surface.blit(self.coin_surf, coin_rect)
+   def show_coins(self, amount):
+		self.coin_amount = amount
+		self.coin_timer.activate()
+
+	def update(self, dt):
+		self.coin_timer.update()
+		self.sprites.update(dt)
+		self.sprites.draw(self.display_surface)
+		self.display_text()
     
 
 class Heart(AnimatedSprite):
