@@ -15,7 +15,14 @@ class Game:
         self.clock = pygame.time.Clock()
         
         #create dictionary to pygame load files... give the path using join so that it works in every os
-        self.tmx_maps  = {0: load_pygame(join("..", "data", "levels", "omni.tmx"))}
+        self.tmx_maps = {
+			0: load_pygame(join('..', 'data', 'levels', 'omni.tmx')),
+			1: load_pygame(join('..', 'data', 'levels', '1.tmx')),
+			2: load_pygame(join('..', 'data', 'levels', '2.tmx')),
+			3: load_pygame(join('..', 'data', 'levels', '3.tmx')),
+			4: load_pygame(join('..', 'data', 'levels', '4.tmx')),
+			5: load_pygame(join('..', 'data', 'levels', '5.tmx')),
+			}
         
         #create levels and send map to the level
         self.current_stage = Level(self.tmx_maps[0])
